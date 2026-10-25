@@ -12,10 +12,15 @@ export const metadata: Metadata = {
 export const revalidate = 60;
 
 export default async function LookbookPage() {
-  const entries = await db.lookbookEntry.findMany({
-    where: { isPublished: true },
-    orderBy: { displayOrder: 'asc' },
-  });
+  let entries: any[] = [];
+  try {
+    entries = await db.lookbookEntry.findMany({
+      where: { isPublished: true },
+      orderBy: { displayOrder: 'asc' },
+    });
+  } catch (err) {
+    console.error('Lookbook fetch error:', err);
+  }
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 space-y-16">

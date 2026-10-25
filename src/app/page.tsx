@@ -45,8 +45,15 @@ export default async function HomePage() {
     }
   } catch (err) {}
 
-  const [categories, featuredProducts, newArrivals, bundles, lookbookEntries, approvedReviews] =
-    await Promise.all([
+  let categories: any[] = [];
+  let featuredProducts: any[] = [];
+  let newArrivals: any[] = [];
+  let bundles: any[] = [];
+  let lookbookEntries: any[] = [];
+  let approvedReviews: any[] = [];
+
+  try {
+    const results = await Promise.all([
       db.category.findMany({
         where: { isPublished: true },
         orderBy: { displayOrder: 'asc' },
@@ -77,6 +84,15 @@ export default async function HomePage() {
         take: 3,
       }),
     ]);
+    categories = results[0];
+    featuredProducts = results[1];
+    newArrivals = results[2];
+    bundles = results[3];
+    lookbookEntries = results[4];
+    approvedReviews = results[5];
+  } catch (err) {
+    console.error('Home page data fetch error:', err);
+  }
 
   return (
     <div className="space-y-20 pb-20">

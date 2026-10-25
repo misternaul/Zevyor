@@ -18,10 +18,15 @@ export default async function ShippingPolicyPage() {
     if (s?.value) content = s.value;
   } catch {}
 
-  const rules = await db.deliveryRule.findMany({
-    where: { isActive: true },
-    orderBy: { priority: 'desc' },
-  });
+  let rules: any[] = [];
+  try {
+    rules = await db.deliveryRule.findMany({
+      where: { isActive: true },
+      orderBy: { priority: 'desc' },
+    });
+  } catch (err) {
+    console.error('Delivery rules fetch error:', err);
+  }
 
   return (
     <div className="max-w-3xl mx-auto px-4 py-16 space-y-8">
